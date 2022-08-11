@@ -22,10 +22,14 @@ export function mountBody(element) {
         <small>Connected to:</small>
         <p id="network" class="is-size-4 my-2">
         </p>
-        <button id="send-button" class="button is-success is-size-5">
-            Send Message
-        </button>
-      </div>
+        <div>
+       
+            <button id="send-button" class="button is-success is-size-5">
+                Send Message
+            </button>
+            <a id="transaction-link" href="" class="is-hidden is-underlined" rel="noreferrer noopener" target="_blank">Click here to see the transaction!</a>
+        </div>
+        </div>
       <footer class="card-footer">
         <p class="card-footer-item">
             <button id="disconnect-button" class="button is-outlined">Disconnect</button>
@@ -41,6 +45,8 @@ export function mountBody(element) {
     window.dispatchEvent(new Event("wallet-disconnect"));
   })
 
+  const sendButton = document.getElementById("send-button");
+  sendButton.addEventListener('click', sendTestMessage)
 
   window.addEventListener('wallet-event', (event) => {
     const {payload, action} = event.detail
@@ -62,5 +68,40 @@ export function mountBody(element) {
       avatar.classList.add('is-hidden');
     }
 
+    if (action === 'accountChanged') {
+      document.querySelector('#account-connection span').innerText = payload.address
+      const avatar = document.querySelector('#account-connection img')
+      avatar.src = window.hashicon(walletConnection.accountId, 64).toDataURL()
+    }
+
+    if (action === 'networkChanged') {
+      document.getElementById('network').innerText = payload.nodeHost;
+    }
+
   })
+}
+
+async function sendTestMessage() {
+  try {
+
+    if (!window.signumLedger) {
+      throw new Error("Ledger Client not initialized");
+    }
+
+    const link = document.getElementById('transaction-link')
+    link.classList.add('is-hidden')
+    const {unsignedTransactionBytes} = await window.signumLedger.message.sendMessage({
+      senderPublicKey: walletConnection.publicKey,
+      recipient: walletConnection.accountId, // send to self
+      message: "If you can read this message, then you successfully sent the message with XT Vanilla Demo App",
+      messageIsText: true,
+      feePlanck: sig$util.Amount.fromSigna('0.01').getPlanck()
+    })
+    const tx = await window.wallet.confirm(unsignedTransactionBytes)
+    link.classList.remove('is-hidden')
+    link.setAttribute('href', `https://t-chain.signum.network/tx/${tx.transactionId}`)
+  } catch (e) {
+    alert(e.message)
+  }
+
 }

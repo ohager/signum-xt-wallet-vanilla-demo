@@ -56,13 +56,18 @@ export function mountNavbar(element) {
       const avatar = document.querySelector('#connect-button-icon img')
       avatar.src = window.hashicon(payload.accountId, 32).toDataURL()
       avatar.classList.remove('is-hidden');
-    }else if(action=== 'disconnected'){
+    } else if (action === 'disconnected') {
       document.getElementById('connect-button-text').innerText = 'Connect Wallet'
       document.querySelector('#connect-button-icon span').classList.remove('is-hidden');
 
       const avatar = document.querySelector('#connect-button-icon img')
       avatar.src = ""
       avatar.classList.add('is-hidden');
+    } else if (action === 'accountChanged') {
+      document.getElementById('connect-button-text').innerText = payload.address
+      const avatar = document.querySelector('#connect-button-icon img')
+      avatar.src = window.hashicon(walletConnection.accountId, 32).toDataURL()
+      avatar.classList.remove('is-hidden');
     }
   })
 

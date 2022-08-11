@@ -12,7 +12,19 @@ const Networks = {
 
 window.wallet = new sig$wallets.GenericExtensionWallet()
 window.walletConnection = null
+window.signumLedger = null
 window.network = Networks.TestNet
+
+function getReedSolomonAddress(publicKey) {
+  return sig$.Address.fromPublicKey(publicKey, window.network === Networks.MainNet ? 'S' : 'TS').getReedSolomonAddress()
+}
+
+function createLedgerClient(nodeHost){
+  window.signumLedger = sig$.LedgerClientFactory.createClient({
+    nodeHost
+  })
+}
+
 
 function dispatchWalletEvent(action, data){
   window.dispatchEvent(new CustomEvent('wallet-event', {detail: {
@@ -26,14 +38,21 @@ function onNetworkChange(args) {
   if (args.networkName === window.network) {
     if (!window.walletConnection) {
       window.dispatchEvent(new Event("wallet-connect"));
+    } else{
+      createLedgerClient(args.nodeHost)
     }
   } else {
     alert("Wallet changed to another network")
+    window.dispatchEvent(new Event("wallet-disconnect"));
   }
 }
 
 function onAccountChange(args) {
-  dispatchWalletEvent('accountChanged', {...args})
+  console.log(args)
+  dispatchWalletEvent('accountChanged', {
+    ...args,
+    address: getReedSolomonAddress(walletConnection.publicKey)
+  })
 }
 
 function onPermissionOrAccountRemoval() {
@@ -41,6 +60,8 @@ function onPermissionOrAccountRemoval() {
   alert("Wallet removed this DApps permission")
   handleDisconnectWallet();
 }
+
+
 
 async function handleConnectWallet(appName) {
   if (window.walletConnection) return;
@@ -62,14 +83,17 @@ async function handleConnectWallet(appName) {
       onAccountRemoved: onPermissionOrAccountRemoval,
     });
 
-    connection.address = sig$.Address.fromPublicKey(connection.publicKey, network === Networks.MainNet ? 'S' : 'TS').getReedSolomonAddress()
+    console.log(connection)
     window.walletConnection = connection;
+    createLedgerClient(connection.currentNodeHost)
     dispatchWalletEvent('connected', {
       accountId: connection.accountId,
       publicKey: connection.publicKey,
-      address: connection.address,
+      address: getReedSolomonAddress(connection.publicKey), // attention: address is not part of the connection!
       host: connection.currentNodeHost
     })
+
+
   } catch (e) {
     alert(e.message)
   }
@@ -78,6 +102,7 @@ async function handleConnectWallet(appName) {
 async function handleDisconnectWallet() {
   window.wallet = new sig$wallets.GenericExtensionWallet();
   window.walletConnection = null;
+  window.signumLedger = null;
   dispatchWalletEvent('disconnected')
   walletListener.unlisten();
 }
