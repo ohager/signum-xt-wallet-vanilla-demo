@@ -51,7 +51,7 @@ function onAccountChange(args) {
   console.log(args)
   dispatchWalletEvent('accountChanged', {
     ...args,
-    address: getReedSolomonAddress(walletConnection.publicKey)
+    address: getReedSolomonAddress(args.accountPublicKey)
   })
 }
 

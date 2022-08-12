@@ -29,7 +29,7 @@ export function mountBody(element) {
             <button id="send-button" class="button is-success is-size-5 m-auto">
                 Send Message
             </button>
-            <a id="transaction-link" href="" class="mt-2 is-underlined" rel="noreferrer noopener" target="_blank">Click here to see the transaction!</a>
+            <a id="transaction-link" href="" class="mt-2 is-underlined is-hidden" rel="noreferrer noopener" target="_blank">Click here to see the transaction!</a>
         </div>
         </div>
       <footer class="card-footer">
@@ -73,7 +73,7 @@ export function mountBody(element) {
     if (action === 'accountChanged') {
       document.querySelector('#account-connection span').innerText = payload.address
       const avatar = document.querySelector('#account-connection img')
-      avatar.src = window.hashicon(walletConnection.accountId, 64).toDataURL()
+      avatar.src = window.hashicon(payload.accountId, 64).toDataURL()
     }
 
     if (action === 'networkChanged') {

@@ -66,7 +66,7 @@ export function mountNavbar(element) {
     } else if (action === 'accountChanged') {
       document.getElementById('connect-button-text').innerText = payload.address
       const avatar = document.querySelector('#connect-button-icon img')
-      avatar.src = window.hashicon(walletConnection.accountId, 32).toDataURL()
+      avatar.src = window.hashicon(payload.accountId, 32).toDataURL()
       avatar.classList.remove('is-hidden');
     }
   })
