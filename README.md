@@ -5,10 +5,14 @@ This is a demo/starter on how to use Signum XT Wallet in a plain html,css,javasc
 It uses:
 
 - Plain HTML
-- Bulma CSS
-- SignumJS
+- [Bulma CSS](https://bulma.io/)
+- [SignumJS](https://signum-network.gitbook.io/signumjs/)
 
-> There is a NextJS/ReactJS starter available also 
+> There is a [NextJS/ReactJS starter](https://github.com/ohager/signum-xt-wallet-react-demo) available also 
+
+
+[ONLINE DEMO](https://signum-xt-wallet-vanilla-demo.vercel.app/)
+
 
 # Get Started
 
