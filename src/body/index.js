@@ -1,3 +1,5 @@
+import "./body.css"
+
 export function mountBody(element) {
   element.innerHTML = `
 <div class="hero-body">
@@ -10,7 +12,7 @@ export function mountBody(element) {
         Get XT wallet for <a class="is-underlined" href="https://chrome.google.com/webstore/detail/signum-xt-wallet/kdgponmicjmjiejhifbjgembdcaclcib" rel="noreferrer noopener" target="_blank">Google Chrome</a> or <a class="is-underlined" href="https://addons.mozilla.org/en-US/firefox/addon/signum-xt-wallet/" rel="noreferrer noopener" target="_blank">Mozilla Firefox</a> 
     </h2>
 
-    <div id="successful-connection" class="card">
+    <div id="successful-connection" class="card is-hidden">
       <div class="card-content">
         <p class="is-size-3">
           Congratulations. You are connected with the wallet 🎉
@@ -22,12 +24,12 @@ export function mountBody(element) {
         <small>Connected to:</small>
         <p id="network" class="is-size-4 my-2">
         </p>
-        <div>
-       
-            <button id="send-button" class="button is-success is-size-5">
+        <div class="is-flex is-flex-direction-column is-justify-center">
+          
+            <button id="send-button" class="button is-success is-size-5 m-auto">
                 Send Message
             </button>
-            <a id="transaction-link" href="" class="is-hidden is-underlined" rel="noreferrer noopener" target="_blank">Click here to see the transaction!</a>
+            <a id="transaction-link" href="" class="mt-2 is-underlined" rel="noreferrer noopener" target="_blank">Click here to see the transaction!</a>
         </div>
         </div>
       <footer class="card-footer">
